@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+
+  webserver:
+    image: ghcr.io/orcacollective/techbloc-airflow:${DOCKER_IMAGE_TAG:-latest}
+    env_file: .env
+    restart: always
+    ports:
+      - "${AIRFLOW_PORT}:8080"
+    volumes:
+      - ./techbloc_airflow/dags:/usr/local/airflow/techbloc_airflow/dags
+      - ./db:/usr/local/airflow/db

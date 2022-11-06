@@ -91,18 +91,14 @@ ipython_config.py
 #   install all needed dependencies.
 #Pipfile.lock
 
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
-
-# Celery stuff
+# celery beat schedule file
 celerybeat-schedule
-celerybeat.pid
 
 # SageMath parsed files
 *.sage.py
 
 # Environments
-.env
+*.env
 .venv
 env/
 venv/
@@ -127,3 +123,30 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Editors and IDE's
+.vscode/
+.idea/
+*.sublime-workspace
+
+# environment file which may have keys
+env.sh
+
+# airflow testing detritus
+airflow.cfg
+airflow.db
+logs/
+unittests.cfg
+!*/util/test_resources/logs/*
+
+# large SI sample data
+si_samples_*
+
+# Vim detritus
+*.swp
+
+# macOS
+.DS_Store
+
+# Database directory
+db/
