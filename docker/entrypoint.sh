@@ -4,14 +4,14 @@ set -e
 
 function help_text() {
   cat << 'END'
+ _____         _      ______ _               ___  _       __ _
+|_   _|       | |     | ___ \ |             / _ \(_)     / _| |
+  | | ___  ___| |__   | |_/ / | ___   ___  / /_\ \_ _ __| |_| | _____      __
+  | |/ _ \/ __| '_ \  | ___ \ |/ _ \ / __| |  _  | | '__|  _| |/ _ \ \ /\ / /
+  | |  __/ (__| | | | | |_/ / | (_) | (__  | | | | | |  | | | | (_) \ V  V /
+  \_/\___|\___|_| |_| \____/|_|\___/ \___| \_| |_/_|_|  |_| |_|\___/ \_/\_/
 
-  ,-.  ;-.  ,--. .  . .   , ,--. ,-.   ,-.  ,--.
- /   \ |  ) |    |\ | |  /  |    |  ) (   ` |
- |   | |-'  |-   | \| | /   |-   |-<   `-.  |-
- \   / |    |    |  | |/    |    |  \ .   ) |
-  `-'  '    `--' '  ' '     `--' '  '  `-'  `--'
-
-Docker entrypoint script for Openverse Airflow. Unless specified, all commands
+Docker entrypoint script for Tech Bloc Airflow. Unless specified, all commands
 will wait for the database to be ready and will upgrade the Airflow schema.
 
 Usage:
@@ -58,9 +58,6 @@ while read -r var_string; do
 # only include airflow connections with http somewhere in the string
 done < <(env | grep "^AIRFLOW_CONN[A-Z_]\+=http.*$")
 
-# Wait for postgres
-header "WAITING FOR POSTGRES"
-python /opt/airflow/wait_for_db.py
 # Upgrade the database -- command is idempotent.
 header "MIGRATING DATABASE"
 airflow db upgrade

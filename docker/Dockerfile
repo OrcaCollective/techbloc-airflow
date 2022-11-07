@@ -20,7 +20,7 @@ ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_COLOR=1
 
 # Airflow/workflow configuration
-ENV OUTPUT_DIR=/var/workflow_output/
+ENV DATABASE_DIR=${AIRFLOW_HOME}/db/
 ENV AIRFLOW__CORE__DAGS_FOLDER=${DAGS_FOLDER}
 ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
 ENV AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
@@ -39,14 +39,13 @@ ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://techbloc-airflow-logs
 #    && apt-get autoremove -y \
 #    && rm -rf /var/lib/apt/lists/*
 RUN useradd -m -d ${AIRFLOW_HOME} airflow && \
-    mkdir -p ${OUTPUT_DIR} && \
-    chown airflow:airflow ${OUTPUT_DIR}
+    mkdir -p ${DATABASE_DIR} && \
+    chown airflow:airflow ${DATABASE_DIR}
 USER airflow
 
 WORKDIR  ${AIRFLOW_HOME}
 # Always add the prod req because the dev reqs depend on it for deduplication
 COPY ${REQUIREMENTS_FILE} requirements_prod.txt ${AIRFLOW_HOME}/
-COPY docker/wait_for_db.py /opt/airflow/
 
 # args go out of scope when a new build stage starts so it must be redeclared here
 ARG PROJECT_PY_VERSION
