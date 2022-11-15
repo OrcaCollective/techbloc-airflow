@@ -1,5 +1,24 @@
 version: '3'
 
+
+# Common build configuration for Airflow
+# Extension field, see https://docs.docker.com/compose/compose-file/compose-file-v3/#extension-fields
+x-airflow-common:
+  &airflow-common
+  restart: on-failure
+  depends_on:
+    - s3
+  build:
+    context: .
+    args:
+      - REQUIREMENTS_FILE=requirements_dev.txt
+      - PROJECT_PY_VERSION=${PROJECT_PY_VERSION}
+      - PROJECT_AIRFLOW_VERSION=${PROJECT_AIRFLOW_VERSION}
+    dockerfile: docker/Dockerfile
+  volumes:
+    - ./techbloc_airflow:/opt/airflow/techbloc_airflow
+
+
 services:
   # Services only needed for local development
   s3:
@@ -32,24 +51,29 @@ services:
       timeout: 20s
       retries: 3
 
-  # Dev changes for the webserver container
-  webserver:
+  # Dev changes for the scheduler
+  scheduler:
+    <<: *airflow-common
     depends_on:
       - s3
-    build:
-      context: .
-      args:
-        - REQUIREMENTS_FILE=requirements_dev.txt
-        - PROJECT_PY_VERSION=${PROJECT_PY_VERSION}
-        - PROJECT_AIRFLOW_VERSION=${PROJECT_AIRFLOW_VERSION}
-      dockerfile: docker/Dockerfile
-    restart: on-failure
+    environment:
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: airflow
+      _AIRFLOW_WWW_USER_PASSWORD: airflow
+      _AIRFLOW_WWW_USER_FIRSTNAME: Air
+      _AIRFLOW_WWW_USER_LASTNAME: Flow
+      _AIRFLOW_WWW_USER_EMAIL: airflow@example.com
     # This command ensures an admin account is created on startup
-    command: init
-    volumes:
-      - ./techbloc_airflow:/usr/local/airflow/techbloc_airflow
-    stdin_open: true
-    tty: true
+    command: scheduler
+
+
+  # Dev changes for the webserver container
+  webserver:
+    <<: *airflow-common
+    depends_on:
+      - s3
+      - scheduler
+    command: webserver
 
 volumes:
   minio:

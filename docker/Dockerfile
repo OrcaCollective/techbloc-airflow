@@ -1,17 +1,17 @@
 # Cannot use $PYTHON_VERSION because that is overwritten by the base image
 # with the patch version (we only care about major and minor version)
 ARG PROJECT_PY_VERSION
+ARG PROJECT_AIRFLOW_VERSION
 
-FROM python:${PROJECT_PY_VERSION}-slim
+FROM apache/airflow:slim-${PROJECT_AIRFLOW_VERSION}-python${PROJECT_PY_VERSION}
 
 # Build-time arguments, with sensible defaults
 ARG REQUIREMENTS_FILE=requirements_prod.txt
 
 # Path configurations
-ENV AIRFLOW_HOME=/usr/local/airflow
+ENV AIRFLOW_HOME=/opt/airflow
 ENV DAGS_FOLDER=${AIRFLOW_HOME}/techbloc_airflow/dags
 ENV PYTHONPATH=${DAGS_FOLDER}
-ENV PATH=/usr/local/airflow/.local/bin:$PATH
 
 # Container optimizations
 ENV PIPNOCACHEDIR=1
@@ -38,9 +38,9 @@ ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://techbloc-airflow-logs
 #    libffi-dev \
 #    && apt-get autoremove -y \
 #    && rm -rf /var/lib/apt/lists/*
-RUN useradd -m -d ${AIRFLOW_HOME} airflow && \
-    mkdir -p ${DATABASE_DIR} && \
-    chown airflow:airflow ${DATABASE_DIR}
+USER root
+RUN mkdir -p ${DATABASE_DIR} && \
+    chown -R airflow ${DATABASE_DIR}
 USER airflow
 
 WORKDIR  ${AIRFLOW_HOME}
@@ -58,5 +58,4 @@ RUN pip install --user -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE}
 
 COPY docker/entrypoint.sh /opt/airflow/entrypoint.sh
 
-ENTRYPOINT ["/opt/airflow/entrypoint.sh"]
-CMD ["server"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "/opt/airflow/entrypoint.sh"]
