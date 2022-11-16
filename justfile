@@ -107,7 +107,6 @@ ipython: _deps
     @just _dc run \
         --rm \
         -w /opt/airflow/techbloc_airflow/dags \
-        -v {{ justfile_directory() }}/.ipython:/home/airflow/.ipython:z \
         {{ SERVICE }} \
         bash -c \'ipython\'
 

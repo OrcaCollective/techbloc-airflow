@@ -16,6 +16,7 @@ x-airflow-common:
       - PROJECT_AIRFLOW_VERSION=${PROJECT_AIRFLOW_VERSION}
     dockerfile: docker/Dockerfile
   volumes:
+    - ipython:/home/airflow/.ipython:z
     - ./techbloc_airflow:/opt/airflow/techbloc_airflow
 
 
@@ -77,3 +78,4 @@ services:
 
 volumes:
   minio:
+  ipython:
