@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+
+  scheduler:
+    image: ghcr.io/orcacollective/techbloc-airflow:${DOCKER_IMAGE_TAG:-latest}
+    env_file: .env
+    restart: always
+    environment:
+      # Upgrade the DB on startup
+      _AIRFLOW_DB_UPGRADE: "true"
+    command: scheduler
+    expose:
+      - "8793"  # Used for fetching logs
+    volumes:
+      - ./techbloc_airflow/dags:/opt/airflow/techbloc_airflow/dags
+      - db:/opt/airflow/db
+
+  webserver:
+    image: ghcr.io/orcacollective/techbloc-airflow:${DOCKER_IMAGE_TAG:-latest}
+    env_file: .env
+    restart: always
+    ports:
+      - "${AIRFLOW_PORT}:8080"
+    volumes:
+      - ./techbloc_airflow/dags:/opt/airflow/techbloc_airflow/dags
+      - db:/opt/airflow/db
+
+volumes:
+  db:
