@@ -1,0 +1,3 @@
+airflow.tech-bloc-sea.dev {
+    reverse_proxy webserver:8080
+}

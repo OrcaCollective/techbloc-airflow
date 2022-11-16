@@ -6,7 +6,8 @@ default:
 
 IS_PROD := env_var_or_default("IS_PROD", "")
 DOCKER_FILES := "--file=docker-compose.yml" + (
-    if IS_PROD != "true" {" --file=docker-compose.override.yml"} else {""}
+    if IS_PROD != "true" {" --file=docker-compose.dev.yml"}
+    else {" --file=docker-compose.prod.yml"}
 )
 SERVICE := env_var_or_default("SERVICE", "scheduler")
 
