@@ -21,8 +21,12 @@ jobs:
       packages: write
       contents: read
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: extractions/setup-just@v1
+      - name: Get python version
+        run: echo "PROJECT_PY_VERSION=$(just py-version)" >> $GITHUB_ENV
+      - name: Get airflow version
+        run: echo "PROJECT_AIRFLOW_VERSION=$(just airflow-version)" >> $GITHUB_ENV
       - name: Log in to GitHub Docker Registry
         uses: docker/login-action@v1
         with:
@@ -30,9 +34,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           push: true
+          args:
+            - PROJECT_PY_VERSION="${{ env.PROJECT_PY_VERSION }}"
+            - PROJECT_AIRFLOW_VERSION="${{ env.PROJECT_AIRFLOW_VERSION }}"
           tags: |
             ghcr.io/${{ env.image_name }}:${{ github.sha }}
             ghcr.io/${{ env.image_name }}:${{ github.ref_name }}
