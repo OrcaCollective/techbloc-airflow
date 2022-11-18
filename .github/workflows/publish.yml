@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - ci/*
+      - ci-*
 
 env:
   image_name: orcacollective/techbloc-airflow
