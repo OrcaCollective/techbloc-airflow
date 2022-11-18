@@ -20,6 +20,7 @@ services:
     image: ghcr.io/orcacollective/techbloc-airflow:${DOCKER_IMAGE_TAG:-latest}
     env_file: .env
     restart: always
+    command: webserver
     ports:
       - "${AIRFLOW_PORT}:8080"
     volumes:

@@ -14,7 +14,6 @@ x-airflow-common:
       - REQUIREMENTS_FILE=requirements_dev.txt
       - PROJECT_PY_VERSION=${PROJECT_PY_VERSION}
       - PROJECT_AIRFLOW_VERSION=${PROJECT_AIRFLOW_VERSION}
-    dockerfile: docker/Dockerfile
   volumes:
     - ipython:/home/airflow/.ipython:z
     - ./techbloc_airflow:/opt/airflow/techbloc_airflow
@@ -64,8 +63,6 @@ services:
       _AIRFLOW_WWW_USER_FIRSTNAME: Air
       _AIRFLOW_WWW_USER_LASTNAME: Flow
       _AIRFLOW_WWW_USER_EMAIL: airflow@example.com
-    # This command ensures an admin account is created on startup
-    command: scheduler
 
 
   # Dev changes for the webserver container
@@ -74,7 +71,6 @@ services:
     depends_on:
       - s3
       - scheduler
-    command: webserver
 
 volumes:
   minio:
