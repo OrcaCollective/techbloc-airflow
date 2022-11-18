@@ -37,9 +37,9 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          args:
-            - PROJECT_PY_VERSION="${{ env.PROJECT_PY_VERSION }}"
-            - PROJECT_AIRFLOW_VERSION="${{ env.PROJECT_AIRFLOW_VERSION }}"
+          build-args: |
+            PROJECT_PY_VERSION=${{ env.PROJECT_PY_VERSION }}
+            PROJECT_AIRFLOW_VERSION=${{ env.PROJECT_AIRFLOW_VERSION }}
           tags: |
             ghcr.io/${{ env.image_name }}:${{ github.sha }}
             ghcr.io/${{ env.image_name }}:${{ github.ref_name }}
