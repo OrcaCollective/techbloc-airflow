@@ -6,7 +6,9 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - ci/*
+      # Note: this cannot be "ci/" because docker complains about the name
+      # when it tries to make the image name
+      - ci-*
 
 env:
   image_name: orcacollective/techbloc-airflow
