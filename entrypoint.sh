@@ -61,4 +61,10 @@ while read -r var_string; do
 # only include airflow connections with http somewhere in the string
 done < <(env | grep "^AIRFLOW_CONN[A-Z_]\+=http.*$")
 
-exec /entrypoint "$@"
+header "COPYING SSH FILES"
+
+mkdir /home/airflow/.ssh/
+cp /opt/airflow/.ssh/* /home/airflow/.ssh/
+chown -R airflow /home/airflow/.ssh/
+
+exec runuser -u airflow -- /entrypoint "$@"
