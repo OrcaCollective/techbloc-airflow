@@ -57,6 +57,10 @@ up flags="": dotenv
 down flags="":
     @just _dc down {{ flags }}
 
+# Pull all new images
+pull flags="":
+    @just _dc pull {{ flags }}
+
 # Recreate all volumes and containers from scratch
 recreate: dotenv
     @just down -v
@@ -68,9 +72,8 @@ logs service="": up
 
 # Pull, build, and deploy all services
 deploy:
-    @just down
     -git pull
-    @just build
+    @just pull
     @just up
 
 # Run pre-commit on all files
