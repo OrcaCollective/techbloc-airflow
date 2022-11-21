@@ -103,8 +103,8 @@ test *pytestargs:
     @just _mount-tests "bash -c \'pytest {{ pytestargs }}\'"
 
 # Open a shell into the webserver container
-shell: up
-    @just _dc exec {{ SERVICE }} /bin/bash
+shell user="airflow": up
+    @just _dc exec -u {{ user }} {{ SERVICE }} /bin/bash
 
 # Launch an IPython REPL using the webserver image
 ipython: _deps
