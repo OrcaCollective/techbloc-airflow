@@ -15,7 +15,7 @@ services:
 
   scheduler:
     volumes:
-      - /home/techbloc/.ssh:/opt/airflow/.ssh
+      - /home/techbloc/.ssh:/opt/ssh
 
 volumes:
   caddy_data:

@@ -39,8 +39,8 @@ ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://techbloc-airflow-logs
 #    && apt-get autoremove -y \
 #    && rm -rf /var/lib/apt/lists/*
 USER root
-RUN mkdir -p ${DATABASE_DIR} /home/airflow/.ipython/ /opt/airflow/.ssh/ && \
-    chown -R airflow ${DATABASE_DIR} /home/airflow/.ipython/ /opt/airflow/.ssh/
+RUN mkdir -p ${DATABASE_DIR} /home/airflow/.ipython/ /opt/ssh/ && \
+    chown -R airflow ${DATABASE_DIR} /home/airflow/.ipython/ /opt/ssh/
 USER airflow
 
 WORKDIR  ${AIRFLOW_HOME}

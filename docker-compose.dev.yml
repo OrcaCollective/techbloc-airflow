@@ -17,7 +17,7 @@ x-airflow-common:
   volumes:
     - ipython:/home/airflow/.ipython:z
     - ./techbloc_airflow:/opt/airflow/techbloc_airflow
-    - ~/.ssh:/opt/airflow/.ssh
+    - ~/.ssh:/opt/ssh/
 
 
 services:
