@@ -17,6 +17,10 @@ services:
     volumes:
       - /home/techbloc/.ssh:/opt/ssh
 
+  webserver:
+    volumes:
+      - /home/techbloc/.ssh:/opt/ssh
+
 volumes:
   caddy_data:
   caddy_config:
