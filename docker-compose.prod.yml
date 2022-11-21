@@ -13,6 +13,10 @@ services:
       - $PWD/site:/srv
       - caddy_config:/config
 
+  scheduler:
+    volumes:
+      - /home/techbloc/.ssh:/opt/airflow/.ssh
+
 volumes:
   caddy_data:
   caddy_config:
