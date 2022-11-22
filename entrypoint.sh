@@ -61,4 +61,13 @@ while read -r var_string; do
 # only include airflow connections with http somewhere in the string
 done < <(env | grep "^AIRFLOW_CONN[A-Z_]\+=http.*$")
 
-exec /entrypoint "$@"
+header "COPYING SSH FILES"
+
+mkdir -p /home/airflow/.ssh/
+cp /opt/ssh/* /home/airflow/.ssh/
+chown -R airflow /home/airflow/.ssh/
+
+# This script is run as root, but everything hereafter we want to run as
+# the airflow user. This is done so that permissions with the host can be
+# managed appropriately.
+exec runuser -u airflow -- /entrypoint "$@"
