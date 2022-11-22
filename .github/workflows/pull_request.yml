@@ -31,5 +31,4 @@ jobs:
           chmod -R 777 $SSH_DIRECTORY
           ls -lah $SSH_DIRECTORY/.ssh
           just build
-          just _dc config
           just test
