@@ -6,6 +6,7 @@ services:
     image: ghcr.io/orcacollective/techbloc-airflow:${DOCKER_IMAGE_TAG:-latest}
     env_file: .env
     restart: always
+    # Only necessary for the entrypoint, services run as "airflow"
     user: root
     environment:
       # Upgrade the DB on startup
@@ -21,6 +22,7 @@ services:
     image: ghcr.io/orcacollective/techbloc-airflow:${DOCKER_IMAGE_TAG:-latest}
     env_file: .env
     restart: always
+    # Only necessary for the entrypoint, services run as "airflow"
     user: root
     command: webserver
     ports:

@@ -67,4 +67,7 @@ mkdir -p /home/airflow/.ssh/
 cp /opt/ssh/* /home/airflow/.ssh/
 chown -R airflow /home/airflow/.ssh/
 
+# This script is run as root, but everything hereafter we want to run as
+# the airflow user. This is done so that permissions with the host can be
+# managed appropriately.
 exec runuser -u airflow -- /entrypoint "$@"
