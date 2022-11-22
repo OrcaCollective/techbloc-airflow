@@ -13,6 +13,7 @@ SERVICE := env_var_or_default("SERVICE", "scheduler")
 
 export PROJECT_PY_VERSION := `grep '# PYTHON' requirements_prod.txt | awk -F= '{print $2}'`
 export PROJECT_AIRFLOW_VERSION := `grep '^apache-airflow' requirements_prod.txt | awk -F= '{print $3}'`
+export SSH_DIRECTORY := env_var_or_default("SSH_DIRECTORY", "")
 
 # Print the required Python version
 @py-version:

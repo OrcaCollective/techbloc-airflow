@@ -23,10 +23,10 @@ jobs:
       - uses: extractions/setup-just@v1
       - name: Run tests
         # Directory creation step required for testing
+        env:
+          SSH_DIRECTORY: /tmp/.ssh
         run: |
-          mkdir -p ~/.ssh
-          chmod -R 666 ~/.ssh
-          ls -lah ~/.ssh
+          mkdir -p $SSH_DIRECTORY
           just build
           just up
           just test
