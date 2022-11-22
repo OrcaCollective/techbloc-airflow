@@ -26,6 +26,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           chmod -R 666 ~/.ssh
+          ls -lah ~/.ssh
           just build
           just up
           just test
