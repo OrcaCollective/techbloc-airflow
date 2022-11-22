@@ -26,7 +26,9 @@ jobs:
         env:
           SSH_DIRECTORY: /tmp/.ssh
         run: |
+          set -x
           mkdir -p $SSH_DIRECTORY
           just build
           just up
+          just _dc config
           just test
