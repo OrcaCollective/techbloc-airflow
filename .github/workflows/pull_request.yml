@@ -28,7 +28,7 @@ jobs:
         run: |
           set -x
           mkdir -p $SSH_DIRECTORY/.ssh
-          chmod -R 755 $SSH_DIRECTORY
+          chmod -R 777 $SSH_DIRECTORY
           ls -lah $SSH_DIRECTORY/.ssh
           just build
           just up
