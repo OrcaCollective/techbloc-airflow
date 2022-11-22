@@ -24,7 +24,7 @@ jobs:
       - name: Run tests
         # Directory creation step required for testing
         run: |
-          mkdir -p ~/.ssh
           just build
+          just _dc config
           just up
           just test
