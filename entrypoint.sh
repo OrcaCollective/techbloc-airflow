@@ -63,7 +63,7 @@ done < <(env | grep "^AIRFLOW_CONN[A-Z_]\+=http.*$")
 
 header "COPYING SSH FILES"
 
-mkdir -p /home/airflow/.ssh/
+mkdir -p /home/airflow/ssh/
 ls -al /opt/ssh/
 cp /opt/ssh/* /home/airflow/.ssh/
 chown -R airflow /home/airflow/.ssh/

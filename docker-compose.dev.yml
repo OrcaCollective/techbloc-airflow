@@ -18,7 +18,7 @@ x-airflow-common:
     - ipython:/home/airflow/.ipython:z
     - ./techbloc_airflow:/opt/airflow/techbloc_airflow
     # Used in CI to override the default ssh directory, otherwise defaults to home
-    - ${SSH_DIRECTORY:-~}/.ssh:/opt/ssh/
+    - ${SSH_DIRECTORY:-~}/ssh:/opt/ssh/
 
 
 services:
