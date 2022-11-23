@@ -64,7 +64,12 @@ done < <(env | grep "^AIRFLOW_CONN[A-Z_]\+=http.*$")
 header "COPYING SSH FILES"
 
 mkdir -p /home/airflow/.ssh/
-cp /opt/ssh/* /home/airflow/.ssh/
+if [ -n "$(ls -A /opt/ssh/ 2>/dev/null)" ]
+then
+    cp /opt/ssh/* /home/airflow/.ssh/
+else
+    echo "!!!!! NOTE: Mounted ssh directory /opt/ssh/ is empty, ssh operations may fail !!!!!"
+fi
 chown -R airflow /home/airflow/.ssh/
 
 # This script is run as root, but everything hereafter we want to run as
