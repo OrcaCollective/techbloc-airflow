@@ -7,7 +7,6 @@
 #   - The first argument to the script should be the Matrix room URL target
 #     for the output sync message.
 #   - The second argument is the API key needed to interact with the webhook server
-# (test change please ignore)
 #
 # Inspired by https://stackoverflow.com/a/21005490/3277713 via torek CC BY-SA 3.0
 set -e
