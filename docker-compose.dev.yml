@@ -15,7 +15,7 @@ x-airflow-common:
       - PROJECT_PY_VERSION=${PROJECT_PY_VERSION}
       - PROJECT_AIRFLOW_VERSION=${PROJECT_AIRFLOW_VERSION}
   volumes:
-    - ipython:/home/airflow/.ipython:z
+    - ipython:/home/airflow/.ipython
     - ./techbloc_airflow:/opt/airflow/techbloc_airflow
     # Used in CI to override the default ssh directory, otherwise defaults to home
     - ${SSH_DIRECTORY:-~/.ssh}:/opt/ssh/
