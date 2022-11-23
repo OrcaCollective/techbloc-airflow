@@ -4,13 +4,16 @@
 # Lifted from https://github.com/WordPress/openverse-catalog/blob/main/dag-sync.sh
 #
 # Inputs:
-#   - The first and only argument to the script should be the Slack hook URL target
+#   - The first argument to the script should be the Matrix room URL target
 #     for the output sync message.
+#   - The second argument is the API key needed to interact with the webhook server
+# (test change please ignore)
 #
 # Inspired by https://stackoverflow.com/a/21005490/3277713 via torek CC BY-SA 3.0
 set -e
 
-SLACK_URL=$1
+MATRIX_ROOM=$1
+MATRIX_KEY=$2
 # https://stackoverflow.com/a/246128 via Dave Dopson CC BY-SA 4.0
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd "$SCRIPT_DIR"
@@ -25,23 +28,17 @@ new=$(git rev-list --reverse --topo-order HEAD..origin/main | head -1)
 # Move ahead to this new commit
 git reset --hard "$new"
 # Verify if have /dags/ in the last commit
-have_dag=$(git log -p -1 "$new"  --pretty=format: --name-only | grep "/dags/")
+have_dag=$(git log -p -1 "$new"  --pretty=format: --name-only | grep "techbloc_airflow/dags/")
 # If there is no files under /dags/ folder, no need to notify, quit early
 [ -z "$have_dag" ] && exit
 
 # Pull out the subject from the new commit
 subject=$(git log -1 --format='%s')
 
-# Here to appease spellcheck
-echo "$SLACK_URL" "$subject"
-
-# TODO: Update to matrix?
-# if [ -z "$SLACK_URL" ]
-#   then
-#   echo "Slack hook was not supplied! Updates will not be posted"
-# else
-#   curl "$SLACK_URL" \
-#     -X POST \
-#     -H 'Content-Type: application/json' \
-#     -d '{"text":"Deployed: '"$subject"'","username":"DAG Sync","icon_emoji":":recycle:","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"Deployed: <https://github.com/WordPress/openverse-catalog/commit/'"$new"'|'"$subject"'>"}}]}'
-# fi
+if [ -z "$MATRIX_ROOM" ]
+  then
+  echo "Matrix room was not supplied! Updates will not be posted"
+else
+  curl "$MATRIX_ROOM" \
+    -d '{"body":"DAG synced: ['"$subject"'](https://github.com/OrcaCollective/techbloc-airflow/commit/'"$new"')", "key": "'"$MATRIX_KEY"'"}'
+fi
