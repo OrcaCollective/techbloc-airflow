@@ -26,9 +26,6 @@ jobs:
         env:
           SSH_DIRECTORY: /tmp/ssh
         run: |
-          set -x
-          sudo mkdir -p $SSH_DIRECTORY
-          sudo chmod -R 777 $SSH_DIRECTORY
-          ls -lah $SSH_DIRECTORY
+          mkdir -p $SSH_DIRECTORY
           just build
           just test

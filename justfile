@@ -91,9 +91,7 @@ _deps:
     @just _dc run \
         -v {{ justfile_directory() }}/tests:/opt/airflow/tests/ \
         -v {{ justfile_directory() }}/pytest.ini:/opt/airflow/pytest.ini \
-        -v /tmp/ssh/:/opt/ssh/ \
         --rm \
-        --user root \
         {{ SERVICE }} \
         {{ command }}
 
