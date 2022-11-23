@@ -21,7 +21,7 @@ cd "$SCRIPT_DIR"
 # Update origin
 git fetch origin
 # Get new commit hash *one commit ahead* of this one
-new=$(git rev-list --reverse --topo-order HEAD..origin/main | head -1)
+new=$(git rev-list --reverse --topo-order HEAD..origin/feature/dag-sync-script | head -1)
 # If there is no new commit hash to move to, nothing has changed, quit early
 [ -z "$new" ] && exit
 
