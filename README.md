@@ -1,5 +1,7 @@
 # Tech Bloc Airflow
 
+This project houses the workflow definitions (DAGs) for Tech Bloc's automations.
+
 ## Configuration values
 
 These are environment variables that can be modified to change `just` behavior:
