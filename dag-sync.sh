@@ -40,5 +40,5 @@ if [ -z "$MATRIX_ROOM" ]
   echo "Matrix room was not supplied! Updates will not be posted"
 else
   curl "$MATRIX_ROOM" \
-    -d '{"body":"Deployed: ['"$subject"'](https://github.com/OrcaCollective/techbloc-airflow/commit/'"$new"')", "key": "'"$MATRIX_KEY"'"}'
+    -d '{"body":"DAG synced: ['"$subject"'](https://github.com/OrcaCollective/techbloc-airflow/commit/'"$new"')", "key": "'"$MATRIX_KEY"'"}'
 fi
