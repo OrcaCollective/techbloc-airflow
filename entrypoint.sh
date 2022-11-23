@@ -68,7 +68,7 @@ if [ -n "$(ls -A /opt/ssh/ 2>/dev/null)" ]
 then
     cp /opt/ssh/* /home/airflow/.ssh/
 else
-    echo "NOTE: Mounted ssh directory /opt/ssh/ is empty, ssh operations may fail"
+    echo "!!!!! NOTE: Mounted ssh directory /opt/ssh/ is empty, ssh operations may fail !!!!!"
 fi
 chown -R airflow /home/airflow/.ssh/
 
