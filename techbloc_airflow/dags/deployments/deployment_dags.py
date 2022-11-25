@@ -9,6 +9,9 @@ from airflow.providers.ssh.operators.ssh import SSHOperator
 
 SERVICES = [
     "1-312-hows-my-driving",
+    "spd-data-watch",
+    "OpenOversight",
+    "spd-lookup",
 ]
 
 
