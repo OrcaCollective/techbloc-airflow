@@ -40,7 +40,7 @@ install: check-py-version
 
 # Create the .env file from the template
 dotenv:
-    @([ ! -f .env ] && cp env.template .env) || true
+    @([ ! -f .env ] && cp .env.template .env) || true
 
 # Run docker compose with the specified command
 _dc *args:
