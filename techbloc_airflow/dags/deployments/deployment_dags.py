@@ -32,6 +32,10 @@ for service in SERVICES:
             task_id=f"deploy_{service_name}",
             ssh_conn_id=constants.SSH_MONOLITH_CONN_ID,
             command="cd {{ params.service }} && just deploy",
+            # Note that AcceptEnv has to be set for IS_PROD on the host
+            # or this will fail silently!!
+            # https://airflow.apache.org/docs/apache-airflow-providers-ssh/stable/_api/airflow/providers/ssh/operators/ssh/index.html#airflow.providers.ssh.operators.ssh.SSHOperator  # noqa
+            environment={"IS_PROD": "true"},
             params={
                 "service": service,
             },
