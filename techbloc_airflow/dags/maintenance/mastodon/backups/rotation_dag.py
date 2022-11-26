@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import NamedTuple
 
 import constants
 from airflow.decorators import dag
@@ -9,10 +10,16 @@ from airflow.providers.amazon.aws.operators.s3 import (
 )
 from airflow.utils.task_group import TaskGroup
 from maintenance.mastodon.backups import rotation
-from maintenance.mastodon.backups.rotation import RotationPeriod
 
 
 BUCKET_NAME = "mastadon-backups"
+
+
+class RotationPeriod(NamedTuple):
+    name: str
+    count: int
+
+
 PERIODS = [
     RotationPeriod("hourly", 24),
     RotationPeriod("daily", 7),
