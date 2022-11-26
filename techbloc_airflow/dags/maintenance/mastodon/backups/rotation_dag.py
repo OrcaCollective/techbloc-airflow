@@ -12,14 +12,12 @@ from airflow.utils.task_group import TaskGroup
 from maintenance.mastodon.backups import rotation
 
 
-BUCKET_NAME = "mastadon-backups"
-
-
 class RotationPeriod(NamedTuple):
     name: str
     count: int
 
 
+BUCKET_NAME = "mastadon-backups"
 PERIODS = [
     RotationPeriod("hourly", 24),
     RotationPeriod("daily", 7),
@@ -41,7 +39,8 @@ for period in PERIODS:
         for service in ["postgres", "redis", "user-media"]:
             with TaskGroup(group_id=f"rotate_{service}"):
 
-                # Hourly backups are stored in the root of the bucket
+                # Hourly backups are stored in the root of the bucket, whereas backups
+                # by period are stored in a prefix by that period name
                 prefix = (
                     f"{service}/{period.name}/"
                     if period.name != "hourly"
