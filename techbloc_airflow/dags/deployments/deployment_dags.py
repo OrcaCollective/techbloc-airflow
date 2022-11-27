@@ -5,6 +5,7 @@ import constants
 from airflow.decorators import dag
 from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.providers.ssh.operators.ssh import SSHOperator
+from common import dag_utils
 
 
 SERVICES = [
@@ -22,9 +23,9 @@ for service in SERVICES:
     @dag(
         dag_id=dag_id,
         start_date=datetime(2022, 11, 24),
-        catchup=False,
         schedule=None,
         tags=["deployment"],
+        default_args=dag_utils.DEFAULT_DAG_ARGS,
     )
     def deployment_dag():
 

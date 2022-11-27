@@ -2,11 +2,38 @@ import json
 import logging
 
 import constants
+from airflow.exceptions import AirflowNotFoundException
 from airflow.models import Variable
 from airflow.providers.http.hooks.http import HttpHook
 
 
 log = logging.getLogger(__name__)
+
+# TODO: Tests
+# TODO: Convert existing DAG to use func
+
+
+def should_send_message(
+    environment: str,
+    http_conn_id: str = constants.MATRIX_WEBHOOK_CONN_ID,
+):
+    """
+    Returns True if:
+      * A Matrix connection is defined
+      * We are in the prod env OR the message override is set.
+    """
+    # Exit early if no slack connection exists
+    hook = HttpHook(http_conn_id=http_conn_id)
+    try:
+        hook.get_conn()
+    except AirflowNotFoundException:
+        return False
+
+    # Exit early if we aren't on production or if force alert is not set
+    force_message = Variable.get(
+        "SLACK_MESSAGE_OVERRIDE", default_var=False, deserialize_json=True
+    )
+    return environment == "prod" or force_message
 
 
 def send_message(
@@ -19,6 +46,10 @@ def send_message(
     """
     hook = HttpHook(method="POST", http_conn_id=conn_id)
     environment = Variable.get("ENVIRONMENT", default_var="dev")
+    if not should_send_message(environment, http_conn_id=conn_id):
+        log.info("Not sending message to Matrix")
+        return
+
     api_key = api_key or Variable.get(constants.MATRIX_WEBHOOK_API_KEY)
     hook.run(
         data=json.dumps(
