@@ -12,6 +12,7 @@ DAG_FOLDER = Path(__file__).parents[2] / "techbloc_airflow" / "dags"
 # DAG paths to test
 DAG_PATHS = [
     "deployments/deployment_dags.py",
+    "maintenance/mastodon/mastodon_cache_clear.py",
 ]
 
 # Expected count from the DagBag once a file has been parsed
