@@ -9,9 +9,6 @@ from airflow.providers.http.hooks.http import HttpHook
 
 log = logging.getLogger(__name__)
 
-# TODO: Tests
-# TODO: Convert existing DAG to use func
-
 
 def should_send_message(
     environment: str,
