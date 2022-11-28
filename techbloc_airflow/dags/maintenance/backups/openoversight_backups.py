@@ -14,7 +14,7 @@ DAYS_TO_KEEP = 14
     start_date=datetime(2022, 11, 10),
     schedule="@weekly",
     catchup=False,
-    tags=["maintenance", "mastodon"],
+    tags=["maintenance", "openoversight", "backups"],
     default_args=dag_utils.DEFAULT_DAG_ARGS,
     doc_md="""
 # Backup OpenOversight database
