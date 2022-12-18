@@ -3,12 +3,14 @@ from typing import NamedTuple
 
 import constants
 from airflow.decorators import dag
+from airflow.operators.python import PythonOperator
 from airflow.providers.amazon.aws.operators.s3 import (
     S3CopyObjectOperator,
     S3DeleteObjectsOperator,
     S3ListOperator,
 )
 from airflow.utils.task_group import TaskGroup
+from common import dag_utils, matrix
 from maintenance.mastodon.backups import rotation
 
 
@@ -34,6 +36,7 @@ for period in PERIODS:
         catchup=False,
         schedule=f"@{period.name}",
         tags=["maintenance", "backups", "mastodon"],
+        default_args=dag_utils.DEFAULT_DAG_ARGS,
     )
     def backup_dag():
         for service in ["postgres", "redis", "user-media"]:
@@ -67,7 +70,17 @@ for period in PERIODS:
                     keys=get_delete_files,
                 )
 
+                notify_complete = PythonOperator(
+                    task_id=f"notify_{service}_{period.name}_complete",
+                    python_callable=matrix.send_message,
+                    op_kwargs={
+                        "text": f"Mastodon: {period.name.capitalize()} `{service}` "
+                        "backup rotations complete"
+                    },
+                )
+
                 list_period_keys >> get_delete_files >> delete_old_backups
+                delete_old_backups >> notify_complete
 
                 # Hourly backups don't require archiving
                 if period.name != "hourly":
