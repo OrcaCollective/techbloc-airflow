@@ -71,17 +71,7 @@ for period in PERIODS:
                     keys=get_delete_files,
                 )
 
-                notify_complete = PythonOperator(
-                    task_id=f"notify_{service}_{period.name}_complete",
-                    python_callable=matrix.send_message,
-                    op_kwargs={
-                        "text": f"Mastodon: {period.name.capitalize()} `{service}` "
-                        "backup rotations complete"
-                    },
-                )
-
                 list_period_keys >> get_delete_files >> delete_old_backups
-                delete_old_backups >> notify_complete
 
                 # Hourly backups don't require archiving
                 if period.name != "hourly":
@@ -105,6 +95,16 @@ for period in PERIODS:
                         dest_bucket_key=f"{service}/{period.name}/{most_recent_backup}",
                     )
 
+                    notify_complete = PythonOperator(
+                        task_id=f"notify_{service}_{period.name}_complete",
+                        python_callable=matrix.send_message,
+                        op_kwargs={
+                            "text": f"Mastodon: {period.name.capitalize()} `{service}` "
+                            "backup rotations complete"
+                        },
+                    )
+
                     most_recent_backup >> copy_most_recent >> list_period_keys
+                    delete_old_backups >> notify_complete
 
     backup_dag()
