@@ -1,10 +1,11 @@
 import json
 import logging
 
-import constants
 from airflow.exceptions import AirflowNotFoundException
 from airflow.models import Variable
 from airflow.providers.http.hooks.http import HttpHook
+
+import constants
 
 
 log = logging.getLogger(__name__)

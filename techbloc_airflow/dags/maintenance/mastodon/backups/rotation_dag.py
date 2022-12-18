@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import NamedTuple
 
-import constants
 from airflow.decorators import dag
 from airflow.operators.python import PythonOperator
 from airflow.providers.amazon.aws.operators.s3 import (
@@ -10,6 +9,8 @@ from airflow.providers.amazon.aws.operators.s3 import (
     S3ListOperator,
 )
 from airflow.utils.task_group import TaskGroup
+
+import constants
 from common import dag_utils, matrix
 from maintenance.mastodon.backups import rotation
 

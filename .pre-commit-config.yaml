@@ -39,6 +39,7 @@ repos:
           - --use-parentheses
           - --ensure-newline-before-comments
           - --line-length=88
+          - --src=techbloc_airflow/dags
 
   - repo: https://github.com/pycqa/flake8
     rev: 3.9.2

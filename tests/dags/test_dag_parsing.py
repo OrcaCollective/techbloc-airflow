@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 from airflow.models import DagBag
+
 from deployments.deployment_dags import SERVICES as DEPLOY_SERVICES
 
 
