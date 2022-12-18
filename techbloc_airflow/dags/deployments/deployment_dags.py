@@ -3,9 +3,9 @@ from datetime import datetime
 from airflow.decorators import dag
 from airflow.operators.python import PythonOperator
 from airflow.providers.ssh.operators.ssh import SSHOperator
-from common import dag_utils, matrix
 
 import constants
+from common import dag_utils, matrix
 
 
 SERVICES = [

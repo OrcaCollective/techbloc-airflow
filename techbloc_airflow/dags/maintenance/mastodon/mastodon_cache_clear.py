@@ -2,9 +2,9 @@ from datetime import datetime
 
 from airflow.decorators import dag
 from airflow.providers.ssh.operators.ssh import SSHOperator
-from common import dag_utils
 
 import constants
+from common import dag_utils
 
 
 DAYS_TO_KEEP = 14

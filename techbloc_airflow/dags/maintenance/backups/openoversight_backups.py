@@ -1,8 +1,9 @@
 from datetime import datetime
 
-import constants
 from airflow.decorators import dag, task
 from airflow.providers.ssh.operators.ssh import SSHOperator
+
+import constants
 from common import dag_utils, matrix
 
 

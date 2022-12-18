@@ -2,6 +2,7 @@ from unittest import mock
 
 import pytest
 from airflow.exceptions import AirflowNotFoundException
+
 from common import matrix
 
 
