@@ -1,10 +1,10 @@
-import json
 from datetime import datetime
 
 import constants
 from airflow.decorators import dag
-from airflow.providers.http.operators.http import SimpleHttpOperator
+from airflow.operators.python import PythonOperator
 from airflow.providers.ssh.operators.ssh import SSHOperator
+from common import dag_utils, matrix
 
 
 SERVICES = [
@@ -22,9 +22,9 @@ for service in SERVICES:
     @dag(
         dag_id=dag_id,
         start_date=datetime(2022, 11, 24),
-        catchup=False,
         schedule=None,
         tags=["deployment"],
+        default_args=dag_utils.DEFAULT_DAG_ARGS,
     )
     def deployment_dag():
 
@@ -41,15 +41,10 @@ for service in SERVICES:
             },
         )
 
-        matrix_alert = SimpleHttpOperator(
+        matrix_alert = PythonOperator(
             task_id=f"notify_{service_name}_deploy",
-            http_conn_id=constants.MATRIX_WEBHOOK_CONN_ID,
-            data=json.dumps(
-                {
-                    "key": "{{ var.value.matrix_webhook_api_key }}",
-                    "body": f"Deployment complete for `{service}`",
-                }
-            ),
+            python_callable=matrix.send_message,
+            op_kwargs={"text": f"Deployment complete for `{service}`"},
         )
 
         ssh_deploy >> matrix_alert

@@ -3,6 +3,7 @@ from datetime import datetime
 import constants
 from airflow.decorators import dag
 from airflow.providers.ssh.operators.ssh import SSHOperator
+from common import dag_utils
 
 
 DAYS_TO_KEEP = 14
@@ -11,9 +12,10 @@ DAYS_TO_KEEP = 14
 @dag(
     dag_id="mastodon_cache_clear",
     start_date=datetime(2022, 11, 10),
-    catchup=False,
     schedule="@weekly",
+    catchup=False,
     tags=["maintenance", "mastodon"],
+    default_args=dag_utils.DEFAULT_DAG_ARGS,
     doc_md=f"""
 # Clear Mastodon cache
 
