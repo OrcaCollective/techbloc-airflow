@@ -7,6 +7,8 @@ BACKUP_LIST = [
     "postgres/daily/",
     "postgres/weekly/",
     "postgres/",
+    "postgres/weekly/2022-11-26_06-00-01_backup.dump",
+    "postgres/daily/2022-11-26_06-00-01_backup.dump",
     "postgres/2022-11-25_19-00-01_backup.dump",
     "postgres/2022-11-25_20-00-01_backup.dump",
     "postgres/2022-11-25_21-00-01_backup.dump",
@@ -31,6 +33,17 @@ BACKUP_LIST = [
     "postgres/2022-11-26_16-00-01_backup.dump",
     "postgres/2022-11-26_17-00-01_backup.dump",
 ]
+
+
+@pytest.mark.parametrize(
+    "backups, top_level, expected",
+    [
+        (BACKUP_LIST, True, BACKUP_LIST[5:]),
+        (BACKUP_LIST, False, BACKUP_LIST[3:]),
+    ],
+)
+def test_filter_top_level(backups, top_level, expected):
+    assert set(rotation._filter_top_level(backups, top_level)) == set(expected)
 
 
 @pytest.mark.parametrize(
@@ -61,17 +74,17 @@ def test_get_most_recent_backup(backups, expected):
     "backups, count, expected",
     [
         # Keep one
-        (BACKUP_LIST, 1, BACKUP_LIST[3:-1]),
+        (BACKUP_LIST, 1, BACKUP_LIST[5:-1]),
         # Keep several, should be last few
-        (BACKUP_LIST, 5, BACKUP_LIST[3:-5]),
+        (BACKUP_LIST, 5, BACKUP_LIST[5:-5]),
         # Keep all
         (BACKUP_LIST, len(BACKUP_LIST), []),
         # Emtpy input list
         ([], 10, []),
         # Don't keep any
-        (BACKUP_LIST, 0, BACKUP_LIST[3:]),
+        (BACKUP_LIST, 0, BACKUP_LIST[5:]),
     ],
 )
 def test_get_files_to_delete(backups, count, expected):
-    actual = rotation.get_files_to_delete.function(backups, count)
+    actual = rotation.get_files_to_delete.function(backups, count, True)
     assert set(actual) == set(expected)

@@ -60,9 +60,15 @@ for period in PERIODS:
                     prefix=prefix,
                 )
 
+                # The hourly runs will also include all backups recursively, so
+                # in non-hourly cases we'll need to filter those out
                 get_delete_files = rotation.get_files_to_delete.override(
                     task_id=f"get_files_to_delete_{service}"
-                )(list_period_keys.output, period.count)
+                )(
+                    backups=list_period_keys.output,
+                    count=period.count,
+                    top_level=period.name == "hourly",
+                )
 
                 delete_old_backups = S3DeleteObjectsOperator(
                     task_id=f"delete_old_backups_{service}",
