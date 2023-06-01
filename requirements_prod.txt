@@ -1,2 +1,2 @@
 # PYTHON=3.10
-apache-airflow[amazon,sqlite,http,ssh]==2.4.3
+apache-airflow[amazon,sqlite,http,ssh]==2.6.1
