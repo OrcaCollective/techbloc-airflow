@@ -9,6 +9,7 @@ from airflow.providers.amazon.aws.operators.s3 import (
     S3ListOperator,
 )
 from airflow.utils.task_group import TaskGroup
+from airflow.utils.trigger_rule import TriggerRule
 
 import constants
 from common import dag_utils, matrix
@@ -58,6 +59,10 @@ for period in PERIODS:
                     aws_conn_id=constants.SPACES_MASTODON_CONN_ID,
                     bucket=BUCKET_NAME,
                     prefix=prefix,
+                    # FIXME: Temporary fix to ensure downstream deletion gets run even
+                    # FIXME: if the copy file step prior fails due to a read timeout.
+                    # FIXME: This should be removed once the timeouts can be adjusted.
+                    trigger_rule=TriggerRule.NONE_SKIPPED,
                 )
 
                 # The hourly runs will also include all backups recursively, so
