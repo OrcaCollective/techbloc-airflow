@@ -44,7 +44,7 @@ dotenv:
 
 # Run docker compose with the specified command
 _dc *args:
-    docker-compose {{ DOCKER_FILES }} {{ args }}
+    docker compose {{ DOCKER_FILES }} {{ args }}
 
 # Build all (or specified) container(s)
 build service="": dotenv
