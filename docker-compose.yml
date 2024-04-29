@@ -4,9 +4,8 @@ services:
   postgres:
     image: postgres:13
     environment:
-      # FIXME
       POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-airflow}
       POSTGRES_DB: airflow
     volumes:
       - airflow-db:/var/lib/postgresql/data
