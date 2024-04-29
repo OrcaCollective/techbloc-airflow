@@ -1,25 +1,42 @@
 version: '3'
 
 services:
+  postgres:
+    image: postgres:13
+    environment:
+      # FIXME
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - airflow-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      retries: 5
+    restart: always
 
   scheduler:
     image: ghcr.io/orcacollective/techbloc-airflow:${DOCKER_IMAGE_TAG:-latest}
+    depends_on:
+      - postgres
     env_file: .env
     restart: always
     # Only necessary for the entrypoint, services run as "airflow"
     user: root
     environment:
       # Upgrade the DB on startup
-      _AIRFLOW_DB_UPGRADE: "true"
+      _AIRFLOW_DB_MIGRATE: "true"
     command: scheduler
     expose:
       - "8793"  # Used for fetching logs
     volumes:
       - ./techbloc_airflow/dags:/opt/airflow/techbloc_airflow/dags
-      - db:/opt/airflow/db
 
   webserver:
     image: ghcr.io/orcacollective/techbloc-airflow:${DOCKER_IMAGE_TAG:-latest}
+    depends_on:
+      - postgres
     env_file: .env
     restart: always
     # Only necessary for the entrypoint, services run as "airflow"
@@ -29,7 +46,6 @@ services:
       - "${AIRFLOW_PORT}:8080"
     volumes:
       - ./techbloc_airflow/dags:/opt/airflow/techbloc_airflow/dags
-      - db:/opt/airflow/db
 
 volumes:
-  db:
+  airflow-db:

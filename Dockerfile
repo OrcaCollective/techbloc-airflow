@@ -32,13 +32,12 @@ ENV AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID=aws_default
 ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://techbloc-airflow-logs
 
 
-#RUN apt-get update && apt-get -yqq upgrade && apt-get -yqq install \
-#    build-essential \
-#    libpq-dev \
-#    libffi-dev \
-#    && apt-get autoremove -y \
-#    && rm -rf /var/lib/apt/lists/*
 USER root
+RUN apt-get update && apt-get -yqq install \
+    build-essential \
+    libpq-dev \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p ${DATABASE_DIR} /home/airflow/.ipython/ /opt/ssh/ && \
     chown -R airflow ${DATABASE_DIR} /home/airflow/.ipython/ /opt/ssh/
 USER airflow

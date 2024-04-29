@@ -7,6 +7,7 @@ x-airflow-common:
   &airflow-common
   restart: on-failure
   depends_on:
+    - postgres
     - s3
   build:
     context: .
@@ -56,8 +57,6 @@ services:
   # Dev changes for the scheduler
   scheduler:
     <<: *airflow-common
-    depends_on:
-      - s3
     environment:
       _AIRFLOW_WWW_USER_CREATE: "true"
       _AIRFLOW_WWW_USER_USERNAME: airflow
@@ -72,6 +71,7 @@ services:
     <<: *airflow-common
     depends_on:
       - s3
+      - postgres
       - scheduler
 
 volumes:
