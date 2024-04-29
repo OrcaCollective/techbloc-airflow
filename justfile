@@ -81,12 +81,8 @@ deploy:
 lint:
     pre-commit run --all-files
 
-# Load any dependencies necessary for actions on the stack without running the webserver
-_deps:
-    @just up "s3"
-
 # Mount the tests directory and run a particular command
-@_mount-tests command: _deps
+@_mount-tests command:
     # The test directory is mounted into the container only during testing
     @just _dc run \
         -v {{ justfile_directory() }}/tests:/opt/airflow/tests/ \
@@ -99,16 +95,16 @@ _deps:
 test-session:
     @just _mount-tests bash
 
-# Run pytest using the webserver image
+# Run pytest using the scheduler image
 test *pytestargs:
     @just _mount-tests "bash -c \'pytest {{ pytestargs }}\'"
 
-# Open a shell into the webserver container
+# Open a shell into the scheduler container
 shell user="airflow": up
     @just _dc exec -u {{ user }} {{ SERVICE }} /bin/bash
 
-# Launch an IPython REPL using the webserver image
-ipython: _deps
+# Launch an IPython REPL using the scheduler image
+ipython:
     @just _dc run \
         --rm \
         -w /opt/airflow/techbloc_airflow/dags \
@@ -116,8 +112,12 @@ ipython: _deps
         bash -c \'ipython\'
 
 # Run a given command in bash using the scheduler image
-run *args: _deps
+run *args:
     @just _dc run --rm {{ SERVICE }} bash -c \'{{ args }}\'
+
+# Initialize the database
+init:
+    @just run airflow db init
 
 # Launch a pgcli shell on the postgres container (defaults to openledger) use "airflow" for airflow metastore
 db-shell:

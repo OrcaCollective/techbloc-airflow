@@ -14,9 +14,8 @@ ENV DAGS_FOLDER=${AIRFLOW_HOME}/techbloc_airflow/dags
 ENV PYTHONPATH=${DAGS_FOLDER}
 
 # Container optimizations
-ENV PIPNOCACHEDIR=1
-ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
 
 # Airflow/workflow configuration
@@ -32,13 +31,12 @@ ENV AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID=aws_default
 ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://techbloc-airflow-logs
 
 
-#RUN apt-get update && apt-get -yqq upgrade && apt-get -yqq install \
-#    build-essential \
-#    libpq-dev \
-#    libffi-dev \
-#    && apt-get autoremove -y \
-#    && rm -rf /var/lib/apt/lists/*
 USER root
+RUN apt-get update && apt-get -yqq install \
+    build-essential \
+    libpq-dev \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p ${DATABASE_DIR} /home/airflow/.ipython/ /opt/ssh/ && \
     chown -R airflow ${DATABASE_DIR} /home/airflow/.ipython/ /opt/ssh/
 USER airflow
@@ -54,7 +52,7 @@ ARG PROJECT_AIRFLOW_VERSION
 # https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html#constraints-files
 ARG CONSTRAINTS_FILE="https://raw.githubusercontent.com/apache/airflow/constraints-${PROJECT_AIRFLOW_VERSION}/constraints-${PROJECT_PY_VERSION}.txt"
 
-RUN pip install --user -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE}
+RUN pip install -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE}
 
 COPY entrypoint.sh /opt/airflow/entrypoint.sh
 
