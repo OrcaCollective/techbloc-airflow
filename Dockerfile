@@ -14,9 +14,8 @@ ENV DAGS_FOLDER=${AIRFLOW_HOME}/techbloc_airflow/dags
 ENV PYTHONPATH=${DAGS_FOLDER}
 
 # Container optimizations
-ENV PIPNOCACHEDIR=1
-ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
 
 # Airflow/workflow configuration
