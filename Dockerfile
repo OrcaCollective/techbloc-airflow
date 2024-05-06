@@ -25,11 +25,6 @@ ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
 ENV AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
 ENV AIRFLOW__CORE__ENABLE_XCOM_PICKLING=True
 
-# TODO: Test if moving this to .env changes anything!
-ENV AIRFLOW__LOGGING__REMOTE_LOGGING=True
-ENV AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID=aws_default
-ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://techbloc-airflow-logs
-
 
 USER root
 RUN apt-get update && apt-get -yqq install \
