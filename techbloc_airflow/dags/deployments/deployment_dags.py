@@ -13,6 +13,7 @@ SERVICES = [
     "spd-data-watch",
     "OpenOversight",
     "spd-lookup",
+    "bookmarkbot",
 ]
 
 
