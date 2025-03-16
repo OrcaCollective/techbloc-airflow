@@ -10,7 +10,7 @@ from airflow.providers.ssh.operators.ssh import SSHOperator
 import constants
 from common import dag_utils, matrix
 
-from offsite_configs import OFFSITE_CONFIGS, OffsiteConfig
+from maintenance.backups.offsite_configs import OFFSITE_CONFIGS, OffsiteConfig
 
 
 LOCAL_BACKUPS_FOLDER = "/opt/backups"
@@ -66,7 +66,7 @@ It then copies the backup to the local machine, then uploads it to Spaces.
 )
 def backup_matrix():
     for config in OFFSITE_CONFIGS:
-        backup_service(config)
+        backup_service.override(group_id=f"backup_service_{config.name}")(config)
 
 
 backup_matrix()
