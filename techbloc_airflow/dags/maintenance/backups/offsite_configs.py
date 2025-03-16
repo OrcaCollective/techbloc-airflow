@@ -18,11 +18,13 @@ class OffsiteConfig:
         self.final_path = f"{self.backup_folder}/{self.filename}"
         self.command = dedent(f"""
         cd {self.folder} && \
+        just down && \
         docker run --rm \
             -v {self.volume}:/volume \
             -v {self.backup_folder}:/backup \
             loomchild/volume-backup \
-            backup {self.filename}
+            backup {self.filename} && \
+        just up
         """)
 
 

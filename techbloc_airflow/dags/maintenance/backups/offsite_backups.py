@@ -6,6 +6,7 @@ from airflow.providers.amazon.aws.transfers.local_to_s3 import (
     LocalFilesystemToS3Operator,
 )
 from airflow.providers.ssh.operators.ssh import SSHOperator
+from airflow.utils.trigger_rule import TriggerRule
 
 import constants
 from common import dag_utils, matrix
@@ -47,7 +48,20 @@ def backup_service(config: OffsiteConfig):
             f"{config.name} backup complete at: `s3://{BUCKET_NAME}/{config.filename}`"
         )
 
-    backup >> copy_to_local >> copy_to_spaces >> notify_backup_complete()
+    restart_if_failed = SSHOperator(
+        task_id=f"start_if_failed_{config.name}",
+        ssh_conn_id=constants.SSH_MONOLITH_CONN_ID,
+        command=f"cd {config.folder} && just up",
+        trigger_rule=TriggerRule.ONE_FAILED,
+    )
+
+    (
+        backup
+        >> copy_to_local
+        >> copy_to_spaces
+        >> notify_backup_complete()
+        >> restart_if_failed
+    )
 
 
 @dag(
