@@ -1,3 +1,10 @@
+# https://docs.docker.com/reference/compose-file/extension/
+x-mounts: &mounts
+  volumes:
+    - /home/techbloc/.ssh:/opt/ssh
+    - /home/techbloc/backups:/opt/backups
+
+
 services:
 
   caddy:
@@ -12,12 +19,10 @@ services:
       - caddy_config:/config
 
   scheduler:
-    volumes:
-      - /home/techbloc/.ssh:/opt/ssh
+    <<: *mounts
 
   webserver:
-    volumes:
-      - /home/techbloc/.ssh:/opt/ssh
+    <<: *mounts
 
 volumes:
   caddy_data:
