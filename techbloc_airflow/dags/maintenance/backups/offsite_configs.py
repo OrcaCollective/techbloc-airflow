@@ -16,7 +16,8 @@ class OffsiteConfig:
     def __post_init__(self):
         self.filename = f"{self.name}-backup.tar.bz2"
         self.final_path = f"{self.backup_folder}/{self.filename}"
-        self.command = dedent(f"""
+        self.command = dedent(
+            f"""
         cd {self.folder} && \
         just down && \
         docker run --rm \
@@ -25,7 +26,8 @@ class OffsiteConfig:
             loomchild/volume-backup \
             backup {self.filename} && \
         just up
-        """)
+        """
+        )
 
 
 OFFSITE_CONFIGS = [

@@ -10,7 +10,6 @@ from airflow.utils.trigger_rule import TriggerRule
 
 import constants
 from common import dag_utils, matrix
-
 from maintenance.backups.offsite_configs import OFFSITE_CONFIGS, OffsiteConfig
 
 
