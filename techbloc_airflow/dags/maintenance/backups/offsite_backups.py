@@ -23,6 +23,7 @@ def backup_service(config: OffsiteConfig):
     backup = SSHOperator(
         task_id=f"backup_{config.name}",
         ssh_conn_id=constants.SSH_MONOLITH_CONN_ID,
+        environment={"IS_PROD": "true"},
         command=config.command,
     )
 
@@ -49,6 +50,7 @@ def backup_service(config: OffsiteConfig):
     restart_if_failed = SSHOperator(
         task_id=f"start_if_failed_{config.name}",
         ssh_conn_id=constants.SSH_MONOLITH_CONN_ID,
+        environment={"IS_PROD": "true"},
         command=f"cd {config.folder} && just up",
         trigger_rule=TriggerRule.ONE_FAILED,
     )
