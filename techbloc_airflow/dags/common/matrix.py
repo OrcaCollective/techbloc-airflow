@@ -29,7 +29,7 @@ def should_send_message(
 
     # Exit early if we aren't on production or if force alert is not set
     force_message = Variable.get(
-        "SLACK_MESSAGE_OVERRIDE", default_var=False, deserialize_json=True
+        "MATRIX_MESSAGE_OVERRIDE", default_var=False, deserialize_json=True
     )
     return environment == "prod" or force_message
 

@@ -32,8 +32,8 @@ RUN apt-get update && apt-get -yqq install \
     libpq-dev \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
-RUN mkdir -p ${DATABASE_DIR} /home/airflow/.ipython/ /opt/ssh/ && \
-    chown -R airflow ${DATABASE_DIR} /home/airflow/.ipython/ /opt/ssh/
+RUN mkdir -p ${DATABASE_DIR} /home/airflow/.ipython/ /opt/ssh/ /opt/backups && \
+    chown -R airflow ${DATABASE_DIR} /home/airflow/.ipython/ /opt/ssh/ /opt/backups
 USER airflow
 
 WORKDIR  ${AIRFLOW_HOME}
