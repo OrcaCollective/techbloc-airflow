@@ -73,7 +73,7 @@ def backup_service(config: OffsiteConfig):
     doc_md="""
 # Backup volume offsite
 
-This DAG backs up a Docker volume using 
+This DAG backs up a Docker volume using
 [loomchild/volume-backup](https://github.com/loomchild/volume-backup).
 It then copies the backup to the local machine, then uploads it to Spaces.
 """,
