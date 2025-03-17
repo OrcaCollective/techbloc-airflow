@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from airflow.decorators import dag, task, task_group
 from airflow.operators.bash import BashOperator
 from airflow.providers.amazon.aws.transfers.local_to_s3 import (
@@ -7,6 +5,7 @@ from airflow.providers.amazon.aws.transfers.local_to_s3 import (
 )
 from airflow.providers.ssh.operators.ssh import SSHOperator
 from airflow.utils.trigger_rule import TriggerRule
+from pendulum import datetime
 
 import constants
 from common import dag_utils, matrix
@@ -65,7 +64,7 @@ def backup_service(config: OffsiteConfig):
 
 @dag(
     dag_id="offsite_backup",
-    start_date=datetime(2025, 3, 15),
+    start_date=datetime(2025, 3, 15, tz="America/Los_Angeles"),
     schedule="0 3 * * 0",
     catchup=False,
     tags=["maintenance", "matrix", "openoversight", "backups"],
