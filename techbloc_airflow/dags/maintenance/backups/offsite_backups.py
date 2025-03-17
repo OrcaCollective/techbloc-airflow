@@ -40,7 +40,7 @@ def backup_service(config: OffsiteConfig):
         filename=local_backup,
     )
 
-    @task
+    @task(retries=3, retry_exponential_backoff=True)
     def notify_backup_complete():
         matrix.send_message(
             f"{config.name} backup complete at: `s3://{BUCKET_NAME}/{config.filename}`"
