@@ -13,12 +13,13 @@ from maintenance.backups.offsite_configs import OFFSITE_CONFIGS, OffsiteConfig
 
 
 LOCAL_BACKUPS_FOLDER = "/opt/backups"
-BUCKET_NAME = "monolith-backups"
+KEY_BASE = constants.SPACES_KEY_PREFIX + "monolith-backups"
 
 
 @task_group
 def backup_service(config: OffsiteConfig):
     local_backup = f"{LOCAL_BACKUPS_FOLDER}/{config.filename}"
+    s3_key = f"{KEY_BASE}/{config.filename}"
 
     backup = SSHOperator(
         task_id=f"backup_{config.name}",
@@ -35,17 +36,14 @@ def backup_service(config: OffsiteConfig):
     copy_to_spaces = LocalFilesystemToS3Operator(
         task_id=f"copy_local_{config.name}_to_spaces",
         aws_conn_id=constants.SPACES_CONN_ID,
-        dest_bucket=BUCKET_NAME,
-        dest_key=config.filename,
+        dest_key=s3_key,
         replace=True,
         filename=local_backup,
     )
 
     @task(retries=3, retry_exponential_backoff=True)
     def notify_backup_complete():
-        matrix.send_message(
-            f"{config.name} backup complete at: `s3://{BUCKET_NAME}/{config.filename}`"
-        )
+        matrix.send_message(f"{config.name} backup complete at: `{s3_key}`")
 
     restart_if_failed = SSHOperator(
         task_id=f"start_if_failed_{config.name}",
