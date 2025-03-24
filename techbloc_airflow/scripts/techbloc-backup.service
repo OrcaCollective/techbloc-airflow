@@ -1,0 +1,7 @@
+[Unit]
+Description=TechBloc Backup Service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/techbloc/venv/bin/python3 /opt/techbloc/techbloc-backup.py
+EnvironmentFile=/opt/techbloc/techbloc-backup.env
