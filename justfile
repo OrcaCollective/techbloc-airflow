@@ -138,5 +138,6 @@ backup-setup:
     sudo cp {{ SCRIPT_DIR }}/backups/techbloc-backup.service /etc/systemd/system/techbloc-backup.service
     sudo cp {{ SCRIPT_DIR }}/backups/techbloc-backup.timer /etc/systemd/system/techbloc-backup.timer
     sudo systemctl daemon-reload
+    sudo systemctl start techbloc-backup.timer
     sudo systemctl enable techbloc-backup.timer
     @echo "Backup service set up successfully!"
