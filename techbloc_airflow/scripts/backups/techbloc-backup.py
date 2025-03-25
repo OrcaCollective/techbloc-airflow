@@ -2,14 +2,18 @@
 
 import logging
 import os
+import socket
 
 import boto3
+import requests
 
 
 FILENAMES = [f"{name}-backup.tar.bz2" for name in ["matrix", "openoversight"]]
 DOWNLOAD_DIR = os.getenv("DOWNLOAD_DIR")
 SPACES_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME")
 SPACES_BASE_PREFIX = "monolith-backups"
+MATRIX_WEBHOOK_URL = os.getenv("MATRIX_WEBHOOK_URL")
+MATRIX_WEBHOOK_API_KEY = os.getenv("MATRIX_WEBHOOK_API_KEY")
 
 
 log = logging.getLogger(__name__)
@@ -25,7 +29,20 @@ def get_s3_client():
     )
 
 
-def download_files():
+def alert_matrix(filename: str) -> None:
+    text = f"⬇ Backup on `{socket.gethostname()}` for `{filename}` complete."
+    log.info(f"Sending message to Matrix: {text}")
+    response = requests.post(
+        MATRIX_WEBHOOK_URL,
+        json={
+            "key": MATRIX_WEBHOOK_API_KEY,
+            "body": text,
+        },
+    )
+    response.raise_for_status()
+
+
+def download_files() -> None:
     client = get_s3_client()
     for filename in FILENAMES:
         key = f"{SPACES_BASE_PREFIX}/{filename}"
@@ -33,6 +50,7 @@ def download_files():
         log.info(f"Downloading {filename} to {download_path}")
 
         client.download_file(SPACES_BUCKET_NAME, key, download_path)
+        alert_matrix(filename)
     log.info(f"Downloaded {len(FILENAMES)} files")
 
 
