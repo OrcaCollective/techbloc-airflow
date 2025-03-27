@@ -4,16 +4,17 @@ set dotenv-load := false
 default:
   @just --list --unsorted
 
-IS_PROD := env_var_or_default("IS_PROD", "")
+IS_PROD := env("IS_PROD", "")
 DOCKER_FILES := "--file=docker-compose.yml" + (
     if IS_PROD != "true" {" --file=docker-compose.dev.yml"}
     else {" --file=docker-compose.prod.yml"}
 )
-SERVICE := env_var_or_default("SERVICE", "scheduler")
+SERVICE := env("SERVICE", "scheduler")
+SCRIPT_DIR := justfile_directory() + "/techbloc_airflow/scripts"
 
 export PROJECT_PY_VERSION := `grep '# PYTHON' requirements_prod.txt | awk -F= '{print $2}'`
 export PROJECT_AIRFLOW_VERSION := `grep '^apache-airflow' requirements_prod.txt | awk -F= '{print $3}'`
-export SSH_DIRECTORY := env_var_or_default("SSH_DIRECTORY", "")
+export SSH_DIRECTORY := env("SSH_DIRECTORY", "")
 
 # Print the required Python version
 @py-version:
@@ -122,3 +123,21 @@ init:
 # Launch a pgcli shell on the postgres container (defaults to openledger) use "airflow" for airflow metastore
 db-shell:
     @just run bash -c 'sqlite3 /opt/airflow/db/airflow.db'
+
+# Set up the offsite backup systemd service (requires sudo)
+backup-setup:
+    git update-index --assume-unchanged techbloc_airflow/scripts/backups/techbloc-backup.env
+    @echo "Please edit the environment file at {{ SCRIPT_DIR }}/backups/techbloc-backup.env before continuing"
+    @read -p "Press Enter to continue" REPLY
+    sudo mkdir -p /opt/techbloc/
+    sudo chown $USER /opt/techbloc/
+    python3 -m venv /opt/techbloc/venv
+    /opt/techbloc/venv/bin/pip install -r {{ SCRIPT_DIR }}/backups/requirements.txt
+    cp {{ SCRIPT_DIR }}/backups/techbloc-backup.env /opt/techbloc/techbloc-backup.env
+    cp {{ SCRIPT_DIR }}/backups/techbloc-backup.py /opt/techbloc/techbloc-backup.py
+    sudo cp {{ SCRIPT_DIR }}/backups/techbloc-backup.service /etc/systemd/system/techbloc-backup.service
+    sudo cp {{ SCRIPT_DIR }}/backups/techbloc-backup.timer /etc/systemd/system/techbloc-backup.timer
+    sudo systemctl daemon-reload
+    sudo systemctl start techbloc-backup.timer
+    sudo systemctl enable techbloc-backup.timer
+    @echo "Backup service set up successfully!"
