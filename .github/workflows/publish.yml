@@ -22,7 +22,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: extractions/setup-just@v2
+      - uses: extractions/setup-just@v3
       - name: Get python version
         run: echo "PROJECT_PY_VERSION=$(just py-version)" >> $GITHUB_ENV
       - name: Get airflow version
