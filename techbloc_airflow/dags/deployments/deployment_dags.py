@@ -14,6 +14,7 @@ SERVICES = [
     "OpenOversight",
     "spd-lookup",
     "bookmarkbot",
+    "sea-scanners-wiki",
 ]
 
 
@@ -29,7 +30,6 @@ for service in SERVICES:
         default_args=dag_utils.DEFAULT_DAG_ARGS,
     )
     def deployment_dag():
-
         ssh_deploy = SSHOperator(
             task_id=f"deploy_{service_name}",
             ssh_conn_id=constants.SSH_MONOLITH_CONN_ID,
