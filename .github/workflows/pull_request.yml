@@ -20,7 +20,7 @@ jobs:
     needs: static-checks
     steps:
       - uses: actions/checkout@v6
-      - uses: extractions/setup-just@v3
+      - uses: extractions/setup-just@v4
       - name: Run tests
         # Directory creation step required for testing
         env:
